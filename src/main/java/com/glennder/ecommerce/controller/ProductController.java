@@ -1,7 +1,7 @@
 package com.glennder.ecommerce.controller;
 
 import com.glennder.ecommerce.dto.ProductRequest;
-import com.glennder.ecommerce.entity.Product;
+import com.glennder.ecommerce.dto.ProductResponse;
 import com.glennder.ecommerce.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -27,23 +27,23 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<Product> getAllProducts() {
+    public List<ProductResponse> getAllProducts() {
         return productService.getAllProducts();
     }
 
     @GetMapping("/{id}")
-    public Product getProductById(@PathVariable Long id) {
+    public ProductResponse getProductById(@PathVariable Long id) {
         return productService.getProductById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Product createProduct(@Valid @RequestBody ProductRequest request) {
+    public ProductResponse createProduct(@Valid @RequestBody ProductRequest request) {
         return productService.createProduct(request);
     }
 
     @PutMapping("/{id}")
-    public Product updateProduct(
+    public ProductResponse updateProduct(
             @PathVariable Long id,
             @Valid @RequestBody ProductRequest request) {
 
