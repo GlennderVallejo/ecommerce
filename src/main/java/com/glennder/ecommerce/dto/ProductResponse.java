@@ -9,6 +9,8 @@ public class ProductResponse {
     private String description;
     private BigDecimal price;
     private Integer stock;
+    private Long categoryId;
+    private String categoryName;
 
     public Long getId() {
         return id;
@@ -50,11 +52,21 @@ public class ProductResponse {
         this.stock = stock;
     }
 
-    public ProductResponse(Long id, String name, String description, BigDecimal price, Integer stock) {
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public ProductResponse(Long id, String name, String description, BigDecimal price, Integer stock, Long categoryId, String categoryName) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.stock = stock;
+        this.categoryId = categoryId;
+        this.categoryName = categoryName;
     }
 }

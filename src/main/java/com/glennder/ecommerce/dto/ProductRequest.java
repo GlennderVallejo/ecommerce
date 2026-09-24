@@ -21,6 +21,9 @@ public class ProductRequest {
     @Min(0)
     private Integer stock;
 
+    @NotNull
+    private Long categoryId;
+
     public String getName() {
         return name;
     }
@@ -51,5 +54,13 @@ public class ProductRequest {
 
     public void setStock(Integer stock) {
         this.stock = stock;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 }

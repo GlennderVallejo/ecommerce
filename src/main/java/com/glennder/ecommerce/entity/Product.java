@@ -1,15 +1,18 @@
 package com.glennder.ecommerce.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.math.BigDecimal;
-import jakarta.persistence.Column;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.math.BigDecimal;
 
 @Entity
 public class Product {
@@ -34,14 +37,25 @@ public class Product {
     @Column(nullable = false)
     private Integer stock;
 
-    public Product(String name, String description, BigDecimal price, Integer stock) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    public Product() {
+    }
+
+    public Product(
+            String name,
+            String description,
+            BigDecimal price,
+            Integer stock,
+            Category category) {
+
         this.name = name;
         this.description = description;
         this.price = price;
         this.stock = stock;
-    }
-    
-    public Product() {
+        this.category = category;
     }
 
     public Long getId() {
@@ -82,5 +96,13 @@ public class Product {
 
     public void setStock(Integer stock) {
         this.stock = stock;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }
