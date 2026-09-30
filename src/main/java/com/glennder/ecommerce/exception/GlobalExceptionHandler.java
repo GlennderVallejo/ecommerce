@@ -19,4 +19,20 @@ public class GlobalExceptionHandler {
     public String handleCategoryNotFound(CategoryNotFoundException exception) {
         return exception.getMessage();
     }
+
+    @ExceptionHandler(CartItemNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleCartItemNotFound(
+            CartItemNotFoundException exception) {
+
+        return exception.getMessage();
+    }
+
+    @ExceptionHandler(InsufficientStockException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleInsufficientStock(
+            InsufficientStockException exception) {
+
+        return exception.getMessage();
+    }
 }
