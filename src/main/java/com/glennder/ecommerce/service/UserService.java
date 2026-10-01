@@ -6,6 +6,8 @@ import com.glennder.ecommerce.dto.RegisterRequest;
 import com.glennder.ecommerce.dto.UserResponse;
 import com.glennder.ecommerce.entity.Role;
 import com.glennder.ecommerce.entity.User;
+import com.glennder.ecommerce.exception.EmailAlreadyExistsException;
+import com.glennder.ecommerce.exception.InvalidCredentialsException;
 import com.glennder.ecommerce.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,11 +32,13 @@ public class UserService {
     public UserResponse register(RegisterRequest request) {
 
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("Email is already registered");
+            throw new EmailAlreadyExistsException(
+                    "Email is already registered"
+            );
         }
 
-        String encodedPassword =
-                passwordEncoder.encode(request.getPassword());
+        String encodedPassword
+                = passwordEncoder.encode(request.getPassword());
 
         User user = new User(
                 request.getName(),
@@ -56,7 +60,7 @@ public class UserService {
     public AuthResponse login(LoginRequest request) {
 
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException(
+                .orElseThrow(() -> new InvalidCredentialsException(
                         "Invalid email or password"
                 ));
 
@@ -64,7 +68,7 @@ public class UserService {
                 request.getPassword(),
                 user.getPassword())) {
 
-            throw new IllegalArgumentException(
+            throw new InvalidCredentialsException(
                     "Invalid email or password"
             );
         }

@@ -47,4 +47,20 @@ public class GlobalExceptionHandler {
     public String handleOrderNotFound(OrderNotFoundException exception) {
         return exception.getMessage();
     }
+
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public String handleEmailAlreadyExists(
+            EmailAlreadyExistsException exception) {
+
+        return exception.getMessage();
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public String handleInvalidCredentials(
+            InvalidCredentialsException exception) {
+
+        return exception.getMessage();
+    }
 }
