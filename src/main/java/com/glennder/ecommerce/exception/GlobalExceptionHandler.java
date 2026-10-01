@@ -35,4 +35,16 @@ public class GlobalExceptionHandler {
 
         return exception.getMessage();
     }
+
+    @ExceptionHandler(EmptyCartException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleEmptyCart(EmptyCartException exception) {
+        return exception.getMessage();
+    }
+
+    @ExceptionHandler(OrderNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleOrderNotFound(OrderNotFoundException exception) {
+        return exception.getMessage();
+    }
 }
