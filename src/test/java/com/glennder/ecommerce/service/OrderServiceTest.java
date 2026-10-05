@@ -74,8 +74,8 @@ class OrderServiceTest {
         when(orderRepository.save(any()))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
-        OrderResponse response =
-                orderService.checkout("test@example.com");
+        OrderResponse response
+                = orderService.checkout("test@example.com");
 
         assertEquals(
                 new BigDecimal("100.00"),
