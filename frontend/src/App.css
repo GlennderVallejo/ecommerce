@@ -998,12 +998,12 @@ footer {
     .header-actions { gap: 0.85rem; }
     .mobile-menu-button, .bag-button { font-size: 0.62rem; }
 
-    /* Hero: no depende de la altura completa del teléfono */
+    /* Hero mobile — canonical */
     .hero {
         min-height: 0;
         height: auto;
         padding-top: 1rem;
-        padding-bottom: 1.25rem;
+        padding-bottom: 1.1rem;
     }
 
     .hero-kicker {
@@ -1015,12 +1015,14 @@ footer {
     .hero-stage {
         flex: none;
         min-height: 0;
-        height: clamp(250px, 48svh, 390px);
-        padding-top: 0;
+        height: clamp(220px, 34svh, 290px);
+        padding: 0;
+        display: flex;
         align-items: center;
     }
 
     .hero-title {
+        margin: 0;
         font-size: clamp(4.6rem, 22.5vw, 6.2rem);
         line-height: 0.78;
     }
@@ -1029,6 +1031,7 @@ footer {
         grid-template-columns: minmax(0, 1fr) 48px;
         gap: 1rem;
         padding-top: 0.8rem;
+        padding-bottom: 0;
     }
 
     .hero-bottom > p {
@@ -1381,6 +1384,8 @@ footer {
     .category-media img {
         width: 64%;
         height: 64%;
+        object-fit: contain;
+        object-position: center;
     }
 
     .category-content h3 {
@@ -1504,3 +1509,338 @@ footer {
         font-size: clamp(3.8rem, 19.5vw, 4.5rem);
     }
 }
+
+/* =========================================================
+   DESKTOP 1080P — CANONICAL COMPOSITION SCALE
+   Global system-level reflow. No item-specific styling.
+   ========================================================= */
+@media (min-width: 901px) {
+    /* Global rhythm */
+    .eyebrow {
+        margin-bottom: 1.5rem;
+    }
+
+    /* Header */
+    .site-header {
+        min-height: 70px;
+    }
+
+    /* Hero */
+    .hero {
+        min-height: clamp(520px, 62vh, 650px);
+        padding: 1rem 1.5rem 1.25rem;
+    }
+
+    .hero-title {
+        font-size: clamp(6rem, 16.5vw, 18rem);
+        line-height: 0.73;
+    }
+
+    .hero-bottom {
+        gap: 1.75rem;
+        padding-top: 0.75rem;
+    }
+
+    .hero-bottom > p {
+        font-size: clamp(0.9rem, 1.1vw, 1.15rem);
+    }
+
+    /* Manifesto */
+    .manifesto {
+        padding: 3.75rem 1.5rem 4rem;
+    }
+
+    .manifesto-grid {
+        grid-template-columns: minmax(0, 1.42fr) minmax(250px, 0.58fr);
+        gap: 3.25rem;
+    }
+
+    .manifesto h2,
+    .categories-heading h2 {
+        font-size: clamp(2.9rem, 5.6vw, 6rem);
+        line-height: 0.84;
+    }
+
+    .manifesto-machine {
+        height: clamp(230px, 22vw, 330px);
+        margin-top: 2rem;
+    }
+
+    .manifesto-machine img {
+        width: min(62%, 540px);
+        max-height: 84%;
+    }
+
+    .manifesto-copy {
+        max-width: 380px;
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+
+    .manifesto-copy > p:last-of-type {
+        margin-top: 1.25rem;
+    }
+
+    .manifesto-spec {
+        margin-top: 2rem;
+    }
+
+    /* Categories */
+    .categories {
+        padding: 3.75rem 1.5rem 4.25rem;
+    }
+
+    .categories-heading {
+        gap: 2.5rem;
+        margin-bottom: 2.25rem;
+    }
+
+    .categories-intro {
+        max-width: 300px;
+        font-size: 0.76rem;
+    }
+
+    .category-card {
+        min-height: 0;
+        height: clamp(315px, 31vh, 350px);
+        padding: 0.9rem;
+    }
+
+    .category-media {
+        min-height: 0;
+        margin: 0.4rem -0.9rem 0.1rem;
+    }
+
+    .category-media img {
+        width: 64%;
+        height: 64%;
+    }
+
+    .category-watermark {
+        font-size: clamp(7rem, 11vw, 11rem);
+    }
+
+    .category-content {
+        grid-template-columns: minmax(0, 1fr) 38px;
+        gap: 0.8rem;
+    }
+
+    .category-content h3 {
+        font-size: clamp(1.3rem, 1.85vw, 2rem);
+        line-height: 0.94;
+    }
+
+    .category-content p {
+        max-width: 235px;
+        margin-top: 0.4rem;
+        font-size: 0.58rem;
+    }
+
+    .category-arrow {
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+    }
+
+    /* Shop */
+    .shop {
+        padding: 3.75rem 1.5rem 4.25rem;
+    }
+
+    .shop-header {
+        gap: 2rem;
+        margin-bottom: 2.25rem;
+    }
+
+    .shop-header h2 {
+        font-size: clamp(3.5rem, 6.8vw, 7rem);
+    }
+
+    .product-grid {
+        gap: 2rem 1rem;
+    }
+
+    .product-visual {
+        aspect-ratio: 1.08 / 1;
+    }
+
+    .product-meta {
+        padding-top: 0.75rem;
+    }
+
+    /* Statement */
+    .statement {
+        min-height: clamp(460px, 58vh, 590px);
+        padding: 1.2rem 1.5rem;
+    }
+
+    .statement h2 {
+        width: min(88%, 1220px);
+        font-size: clamp(3.7rem, 8.1vw, 8.2rem);
+        line-height: 0.79;
+    }
+
+    /* Footer */
+    footer {
+        padding: 3.25rem 1.5rem 1.75rem;
+    }
+
+    .footer-brand {
+        font-size: clamp(5.5rem, 14.5vw, 14.5rem);
+    }
+
+    .footer-grid {
+        margin-top: 2.25rem;
+        padding-top: 1.2rem;
+    }
+}
+
+/* =========================================================
+   CATEGORY IMAGE FIT PROFILES
+   Reusable by aspect ratio — never by SKU/product name.
+   ========================================================= */
+@media (max-width: 768px) {
+    .manifesto {
+        padding-inline: 1.1rem;
+    }
+
+    .manifesto-copy {
+        margin-top: 2.25rem;
+    }
+
+    .manifesto-copy > p:last-of-type {
+        margin-top: 1.5rem;
+    }
+
+    .manifesto-spec {
+        margin-top: 2rem;
+    }
+}
+
+@media (min-width: 901px) {
+    .category-media .category-image {
+        max-width: none;
+        max-height: none;
+        object-fit: contain;
+        object-position: center;
+    }
+
+    .category-media .category-image--wide {
+        width: 64%;
+        height: 64%;
+    }
+
+    .category-media .category-image--square {
+        width: 58%;
+        height: 58%;
+    }
+
+    .category-media .category-image--portrait {
+        width: 43%;
+        height: 64%;
+    }
+}
+
+/* =========================================================
+   TABLET — 601px to 900px
+   Compact vertical composition without affecting phone/desktop.
+   ========================================================= */
+@media (min-width: 601px) and (max-width: 900px) {
+    /* HERO */
+    .hero {
+        min-height: 0;
+        height: auto;
+        padding: 1rem 1.25rem 1.15rem;
+    }
+
+    .hero-kicker {
+        font-size: 0.55rem;
+    }
+
+    .hero-stage {
+        flex: none;
+        min-height: 0;
+        height: clamp(300px, 38svh, 410px);
+        padding: 0;
+        display: flex;
+        align-items: center;
+    }
+
+    .hero-title {
+        margin: 0;
+        font-size: clamp(6.5rem, 18vw, 10rem);
+        line-height: 0.76;
+    }
+
+    .hero-bottom {
+        grid-template-columns: minmax(0, 1fr) 52px;
+        gap: 1.25rem;
+        padding-top: 0.85rem;
+        padding-bottom: 0;
+    }
+
+    .hero-bottom > p {
+        width: 100%;
+        max-width: 360px;
+        font-size: 0.86rem;
+        line-height: 1.18;
+    }
+
+    .circle-link {
+        width: 52px;
+        height: 52px;
+    }
+
+    /* MANIFESTO */
+    .manifesto {
+        min-height: 0;
+        padding: 3.25rem 1.5rem 3.5rem;
+    }
+
+    .manifesto-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.6rem;
+    }
+
+    .manifesto h2 {
+        font-size: clamp(3.6rem, 9vw, 6rem);
+        line-height: 0.82;
+        margin-bottom: 1.6rem;
+    }
+
+    .manifesto-machine {
+        height: clamp(260px, 34vw, 330px);
+        min-height: 0;
+        margin-top: 0;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .manifesto-machine img {
+        width: auto;
+        height: auto;
+        max-width: 78%;
+        max-height: 88%;
+        object-fit: contain;
+        object-position: center;
+    }
+
+    .manifesto-copy {
+        max-width: 520px;
+        margin-top: 0;
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+
+    .manifesto-copy > p:last-of-type {
+        margin-top: 1.25rem;
+    }
+
+    .manifesto-spec {
+        margin-top: 1.8rem;
+    }
+}
+

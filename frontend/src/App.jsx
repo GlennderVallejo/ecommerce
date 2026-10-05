@@ -8,7 +8,7 @@ const categories = [
         description: "Processors, graphics, motherboards and everything inside.",
         code: "CORE",
         image: "/images/products/b850-gaming-wifi6.webp",
-        imageClass: "category-image-components",
+        imageFit: "wide",
     },
     {
         id: 2,
@@ -16,7 +16,7 @@ const categories = [
         description: "Mice, keyboards, audio and precise control.",
         code: "INPUT",
         image: "/images/products/steelseries-rival-5.webp",
-        imageClass: "category-image-peripherals",
+        imageFit: "wide",
     },
     {
         id: 3,
@@ -24,7 +24,7 @@ const categories = [
         description: "The silicon at the center of every serious system.",
         code: "COMPUTE",
         image: "/images/products/ryzen-5-5600x.webp",
-        imageClass: "category-image-processors",
+        imageFit: "square",
     },
     {
         id: 4,
@@ -32,7 +32,7 @@ const categories = [
         description: "Cases and complete systems built around your hardware.",
         code: "SYSTEM",
         image: "/images/products/antec-ax20-rgb-elite.webp",
-        imageClass: "category-image-builds",
+        imageFit: "portrait",
     },
 ];
 
@@ -154,7 +154,7 @@ function CategoryCard( { category, index }) {
                     </span>
             
                     <img
-                        className={category.imageClass}
+                        className={`category-image category-image--${category.imageFit}`}
                         src={category.image}
                         alt=""
                         />
