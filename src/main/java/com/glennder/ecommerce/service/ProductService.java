@@ -2,14 +2,15 @@ package com.glennder.ecommerce.service;
 
 import com.glennder.ecommerce.dto.ProductRequest;
 import com.glennder.ecommerce.dto.ProductResponse;
+import com.glennder.ecommerce.entity.Category;
 import com.glennder.ecommerce.entity.Product;
+import com.glennder.ecommerce.exception.CategoryNotFoundException;
 import com.glennder.ecommerce.exception.ProductNotFoundException;
+import com.glennder.ecommerce.repository.CategoryRepository;
 import com.glennder.ecommerce.repository.ProductRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
-import com.glennder.ecommerce.entity.Category;
-import com.glennder.ecommerce.exception.CategoryNotFoundException;
-import com.glennder.ecommerce.repository.CategoryRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
@@ -17,11 +18,15 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
+    public ProductService(
+            ProductRepository productRepository,
+            CategoryRepository categoryRepository) {
+
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponse> getAllProducts() {
         return productRepository.findAll()
                 .stream()
@@ -29,11 +34,13 @@ public class ProductService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public ProductResponse getProductById(Long id) {
         Product product = findProductById(id);
         return toResponse(product);
     }
 
+    @Transactional
     public ProductResponse createProduct(ProductRequest request) {
         Category category = findCategoryById(request.getCategoryId());
 
@@ -50,6 +57,7 @@ public class ProductService {
         return toResponse(savedProduct);
     }
 
+    @Transactional
     public ProductResponse updateProduct(Long id, ProductRequest request) {
         Product product = findProductById(id);
         Category category = findCategoryById(request.getCategoryId());
@@ -65,6 +73,7 @@ public class ProductService {
         return toResponse(updatedProduct);
     }
 
+    @Transactional
     public void deleteProduct(Long id) {
         Product product = findProductById(id);
         productRepository.delete(product);
