@@ -14,6 +14,7 @@ import com.glennder.ecommerce.repository.UserRepository;
 import java.math.BigDecimal;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CartService {
@@ -32,16 +33,19 @@ public class CartService {
         this.userRepository = userRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<CartItemResponse> getCart(String email) {
 
         User user = findUserByEmail(email);
 
-        return cartItemRepository.findByUserId(user.getId())
+        return cartItemRepository
+                .findByUserIdOrderByIdAsc(user.getId())
                 .stream()
                 .map(this::toResponse)
                 .toList();
     }
 
+    @Transactional
     public CartItemResponse addItem(
             String email,
             CartItemRequest request) {
@@ -75,6 +79,7 @@ public class CartService {
         return toResponse(cartItemRepository.save(cartItem));
     }
 
+    @Transactional
     public CartItemResponse updateQuantity(
             String email,
             Long cartItemId,
@@ -95,6 +100,7 @@ public class CartService {
         return toResponse(cartItemRepository.save(cartItem));
     }
 
+    @Transactional
     public void removeItem(String email, Long cartItemId) {
 
         User user = findUserByEmail(email);

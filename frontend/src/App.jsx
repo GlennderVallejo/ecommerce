@@ -1,7 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
 
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080/api";
+import AccountModal from "./components/AccountModal";
+import CartDrawer from "./components/CartDrawer";
+
+import {
+    addToCart,
+    getCart,
+    getCategories,
+    getProducts,
+} from "./services/api";
 
 const categoryPresentation = {
     Electronics: {
@@ -83,7 +91,7 @@ function Arrow() {
     return <span aria-hidden="true">↗</span>;
 }
 
-function ProductCard({ product, index }) {
+function ProductCard({ product, index, onAddToCart }) {
     return (
         <article className="product-card">
             <div className="product-visual">
@@ -101,13 +109,15 @@ function ProductCard({ product, index }) {
                 <button
                     className="wishlist"
                     type="button"
-                    aria-label={`Add ${product.name} to wishlist`}
+                    aria-label={`Add ${product.name} to bag`}
+                    title="Add to bag"
+                    onClick={() => onAddToCart(product)}
                 >
                     +
                 </button>
 
                 <span className="product-view">
-                    VIEW <Arrow />
+                    ADD <Arrow />
                 </span>
             </div>
 
@@ -162,51 +172,116 @@ function CategoryCard({ category, index }) {
 
 function App() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
     const [catalogError, setCatalogError] = useState(false);
 
+    const [accountOpen, setAccountOpen] = useState(false);
+    const [cartOpen, setCartOpen] = useState(false);
+
+    const [authenticated, setAuthenticated] = useState(
+        Boolean(localStorage.getItem("pardrit_token"))
+    );
+
+    const [cart, setCart] = useState([]);
+
     const productGridRef = useRef(null);
+
     const dragState = useRef({
         dragging: false,
         startX: 0,
         startScrollLeft: 0,
     });
 
+    const cartQuantity = cart.reduce(
+        (total, item) => total + item.quantity,
+        0
+    );
+
+    const loadCart = async () => {
+        if (!localStorage.getItem("pardrit_token")) {
+            setCart([]);
+            return;
+        }
+
+        try {
+            const cartData = await getCart();
+
+            setCart((currentCart) => {
+                if (currentCart.length === 0) {
+                    return cartData;
+                }
+
+                const currentOrder = new Map(
+                    currentCart.map((item, index) => [
+                        item.productId,
+                        index,
+                    ])
+                );
+
+                return [...cartData].sort((a, b) => {
+                    const aIndex =
+                        currentOrder.get(a.productId) ??
+                        Number.MAX_SAFE_INTEGER;
+
+                    const bIndex =
+                        currentOrder.get(b.productId) ??
+                        Number.MAX_SAFE_INTEGER;
+
+                    return aIndex - bIndex;
+                });
+            });
+        } catch (error) {
+            console.error("PARDRIT cart error:", error);
+
+            if (
+                error.message === "Unauthorized" ||
+                error.message.includes("401")
+            ) {
+                localStorage.removeItem("pardrit_token");
+                setAuthenticated(false);
+                setCart([]);
+            }
+        }
+    };
+
     useEffect(() => {
         const loadCatalog = async () => {
             try {
-                const [productsResponse, categoriesResponse] = await Promise.all([
-                    fetch(`${API_URL}/products`),
-                    fetch(`${API_URL}/categories`),
-                ]);
+                const [productsData, categoriesData] =
+                    await Promise.all([
+                        getProducts(),
+                        getCategories(),
+                    ]);
 
-                if (!productsResponse.ok || !categoriesResponse.ok) {
-                    throw new Error("Could not load catalog");
-                }
+                const enrichedProducts = productsData.map(
+                    (product) => {
+                        const presentation =
+                            productPresentation[product.name] ?? {};
 
-                const productsData = await productsResponse.json();
-                const categoriesData = await categoriesResponse.json();
-
-                const enrichedProducts = productsData.map((product) => {
-                    const presentation = productPresentation[product.name] ?? {};
-
-                    return {
-                        ...product,
-                        brand: presentation.brand ?? "PARDRIT",
-                        type:
-                            presentation.type ??
-                            product.categoryName?.toUpperCase() ??
-                            "HARDWARE",
-                        image:
-                            presentation.image ??
-                            "/images/products/b850-gaming-wifi6.webp",
-                        imageFit: presentation.imageFit ?? "wide",
-                    };
-                });
+                        return {
+                            ...product,
+                            brand:
+                                presentation.brand ?? "PARDRIT",
+                            type:
+                                presentation.type ??
+                                product.categoryName?.toUpperCase() ??
+                                "HARDWARE",
+                            image:
+                                presentation.image ??
+                                "/images/products/b850-gaming-wifi6.webp",
+                            imageFit:
+                                presentation.imageFit ?? "wide",
+                        };
+                    }
+                );
 
                 const enrichedCategories = categoriesData
-                    .filter((category) => categoryPresentation[category.name])
+                    .filter(
+                        (category) =>
+                            categoryPresentation[category.name]
+                    )
                     .map((category) => ({
                         ...category,
                         ...categoryPresentation[category.name],
@@ -216,18 +291,98 @@ function App() {
                 setCategories(enrichedCategories);
                 setCatalogError(false);
             } catch (error) {
-                console.error("PARDRIT catalog error:", error);
+                console.error(
+                    "PARDRIT catalog error:",
+                    error
+                );
                 setCatalogError(true);
             }
         };
 
         loadCatalog();
+        loadCart();
     }, []);
 
+    const handleLogin = async () => {
+        setAuthenticated(true);
+        await loadCart();
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem("pardrit_token");
+
+        setAuthenticated(false);
+        setCart([]);
+        setAccountOpen(false);
+    };
+
+    const handleAccountClick = () => {
+        if (authenticated) {
+            const shouldLogout = window.confirm(
+                "You are signed in. Do you want to sign out?"
+            );
+
+            if (shouldLogout) {
+                handleLogout();
+            }
+
+            return;
+        }
+
+        setAccountOpen(true);
+    };
+
+    const handleBagClick = async () => {
+        if (!authenticated) {
+            setAccountOpen(true);
+            return;
+        }
+
+        await loadCart();
+        setCartOpen(true);
+    };
+
+    const handleAddToCart = async (product) => {
+        if (!authenticated) {
+            setAccountOpen(true);
+            return;
+        }
+
+        try {
+            await addToCart(product.id, 1);
+            await loadCart();
+        } catch (error) {
+            alert(error.message);
+        }
+    };
+
+    const handleCheckoutComplete = (order) => {
+        setCartOpen(false);
+
+        alert(
+            `Order #${order.id} created successfully.\nTotal: ${formatPrice(
+                order.total
+            )}`
+        );
+    };
+
     const startProductDrag = (event) => {
-        if (event.pointerType === "mouse" && event.button !== 0) return;
+        if (
+            event.target.closest("button") ||
+            event.target.closest("a")
+        ) {
+            return;
+        }
+
+        if (
+            event.pointerType === "mouse" &&
+            event.button !== 0
+        ) {
+            return;
+        }
 
         const grid = productGridRef.current;
+
         if (!grid) return;
 
         dragState.current = {
@@ -243,9 +398,12 @@ function App() {
     const moveProductDrag = (event) => {
         const grid = productGridRef.current;
 
-        if (!grid || !dragState.current.dragging) return;
+        if (!grid || !dragState.current.dragging) {
+            return;
+        }
 
-        const deltaX = event.clientX - dragState.current.startX;
+        const deltaX =
+            event.clientX - dragState.current.startX;
 
         grid.scrollLeft =
             dragState.current.startScrollLeft - deltaX;
@@ -271,44 +429,75 @@ function App() {
     return (
         <main>
             <header className="site-header">
-                <a className="brand" href="#top" aria-label="PARDRIT home">
-                    <span className="brand-name">PARDRIT</span>
+                <a
+                    className="brand"
+                    href="#top"
+                    aria-label="PARDRIT home"
+                >
+                    <span className="brand-name">
+                        PARDRIT
+                    </span>
                 </a>
 
-                <nav className="desktop-nav" aria-label="Main navigation">
+                <nav
+                    className="desktop-nav"
+                    aria-label="Main navigation"
+                >
                     <a href="#shop">SHOP</a>
                     <a href="#categories">CATEGORIES</a>
                     <a href="#build">BUILD A PC</a>
                 </nav>
 
                 <div className="header-actions">
-                    <button type="button" className="search-button">
+                    <button
+                        type="button"
+                        className="search-button"
+                    >
                         SEARCH
                     </button>
 
-                    <button type="button" className="account-button">
-                        ACCOUNT
+                    <button
+                        type="button"
+                        className="account-button"
+                        onClick={handleAccountClick}
+                    >
+                        {authenticated
+                            ? "SIGN OUT"
+                            : "ACCOUNT"}
                     </button>
 
                     <button
                         type="button"
                         className="mobile-menu-button"
-                        aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+                        aria-label={
+                            mobileMenuOpen
+                                ? "Close menu"
+                                : "Open menu"
+                        }
                         aria-expanded={mobileMenuOpen}
                         aria-controls="mobile-menu"
                         onClick={() =>
-                            setMobileMenuOpen((open) => !open)
+                            setMobileMenuOpen(
+                                (open) => !open
+                            )
                         }
                     >
-                        <span className="hamburger" aria-hidden="true">
+                        <span
+                            className="hamburger"
+                            aria-hidden="true"
+                        >
                             <span></span>
                             <span></span>
                             <span></span>
                         </span>
                     </button>
 
-                    <button type="button" className="bag-button">
-                        BAG (0)
+                    <button
+                        type="button"
+                        className="bag-button"
+                        onClick={handleBagClick}
+                    >
+                        BAG ({cartQuantity})
                     </button>
                 </div>
 
@@ -321,61 +510,82 @@ function App() {
                 >
                     <a
                         href="#shop"
-                        onClick={() => setMobileMenuOpen(false)}
+                        onClick={() =>
+                            setMobileMenuOpen(false)
+                        }
                     >
                         SHOP
                     </a>
 
                     <a
                         href="#categories"
-                        onClick={() => setMobileMenuOpen(false)}
+                        onClick={() =>
+                            setMobileMenuOpen(false)
+                        }
                     >
                         CATEGORIES
                     </a>
 
                     <a
                         href="#build"
-                        onClick={() => setMobileMenuOpen(false)}
+                        onClick={() =>
+                            setMobileMenuOpen(false)
+                        }
                     >
                         BUILD A PC
                     </a>
 
                     <button
                         type="button"
-                        onClick={() => setMobileMenuOpen(false)}
+                        onClick={() =>
+                            setMobileMenuOpen(false)
+                        }
                     >
                         SEARCH
                     </button>
 
                     <button
                         type="button"
-                        onClick={() => setMobileMenuOpen(false)}
+                        onClick={() => {
+                            setMobileMenuOpen(false);
+                            handleAccountClick();
+                        }}
                     >
-                        ACCOUNT
+                        {authenticated
+                            ? "SIGN OUT"
+                            : "ACCOUNT"}
                     </button>
                 </nav>
             </header>
 
             <section className="hero" id="top">
                 <div className="hero-kicker">
-                    <span>HARDWARE / SYSTEMS / PERFORMANCE</span>
+                    <span>
+                        HARDWARE / SYSTEMS / PERFORMANCE
+                    </span>
                     <span>SAN JOSÉ — CR</span>
                 </div>
 
                 <div className="hero-stage">
-                    <h1 className="hero-title">PARDRIT</h1>
+                    <h1 className="hero-title">
+                        PARDRIT
+                    </h1>
                 </div>
 
                 <div className="hero-bottom">
                     <p>
-                        Hardware selected for people who care about what
-                        happens{" "}
-                        <strong>inside the machine.</strong>
+                        Hardware selected for people who care
+                        about what happens{" "}
+                        <strong>
+                            inside the machine.
+                        </strong>
                     </p>
 
                     <div className="hero-product-note">
                         <span>CURATED HARDWARE</span>
-                        <strong>SAN JOSÉ / COSTA RICA</strong>
+                        <strong>
+                            SAN JOSÉ / COSTA RICA
+                        </strong>
                     </div>
 
                     <a
@@ -389,7 +599,9 @@ function App() {
             </section>
 
             <section className="manifesto">
-                <p className="eyebrow">/ 001 — OUR APPROACH</p>
+                <p className="eyebrow">
+                    / 001 — OUR APPROACH
+                </p>
 
                 <div className="manifesto-grid">
                     <div className="manifesto-heading">
@@ -416,15 +628,16 @@ function App() {
 
                     <div className="manifesto-copy">
                         <p>
-                            Components, peripherals and complete setups
-                            without the visual chaos of the typical tech
-                            store.
+                            Components, peripherals and complete
+                            setups without the visual chaos of
+                            the typical tech store.
                         </p>
 
                         <p>
-                            Serious hardware. Clear information. A store
-                            designed with the same attention we expect from
-                            the products we sell.
+                            Serious hardware. Clear information.
+                            A store designed with the same
+                            attention we expect from the
+                            products we sell.
                         </p>
 
                         <div className="manifesto-spec">
@@ -435,7 +648,10 @@ function App() {
                 </div>
             </section>
 
-            <section className="categories" id="categories">
+            <section
+                className="categories"
+                id="categories"
+            >
                 <div className="categories-heading">
                     <div>
                         <p className="eyebrow">
@@ -450,19 +666,22 @@ function App() {
                     </div>
 
                     <p className="categories-intro">
-                        Explore the store by category. The catalog grows
-                        without changing the layout.
+                        Explore the store by category. The
+                        catalog grows without changing the
+                        layout.
                     </p>
                 </div>
 
                 <div className="category-grid">
-                    {categories.map((category, index) => (
-                        <CategoryCard
-                            key={category.id}
-                            category={category}
-                            index={index}
-                        />
-                    ))}
+                    {categories.map(
+                        (category, index) => (
+                            <CategoryCard
+                                key={category.id}
+                                category={category}
+                                index={index}
+                            />
+                        )
+                    )}
                 </div>
             </section>
 
@@ -472,6 +691,7 @@ function App() {
                         <p className="eyebrow">
                             / 003 — SELECTED HARDWARE
                         </p>
+
                         <h2>NEW HARDWARE</h2>
                     </div>
 
@@ -481,8 +701,8 @@ function App() {
                 </div>
 
                 {catalogError && (
-                    <p>
-                        Catalog temporarily unavailable. Please try again.
+                    <p className="catalog-error">
+                        Catalog temporarily unavailable.
                     </p>
                 )}
 
@@ -501,12 +721,18 @@ function App() {
                             key={product.id}
                             product={product}
                             index={index}
+                            onAddToCart={
+                                handleAddToCart
+                            }
                         />
                     ))}
                 </div>
             </section>
 
-            <section className="statement" id="build">
+            <section
+                className="statement"
+                id="build"
+            >
                 <div className="statement-top">
                     <span>BUILD / PLAY / CREATE</span>
                     <span>HARDWARE WITH INTENT</span>
@@ -524,7 +750,8 @@ function App() {
 
                 <div className="statement-footer">
                     <p>
-                        Performance starts with choosing the right pieces.
+                        Performance starts with choosing the
+                        right pieces.
                         <br />
                         We'll handle the noise.
                     </p>
@@ -536,7 +763,9 @@ function App() {
             </section>
 
             <footer>
-                <div className="footer-brand">PARDRIT</div>
+                <div className="footer-brand">
+                    PARDRIT
+                </div>
 
                 <div className="footer-grid">
                     <p>
@@ -547,8 +776,12 @@ function App() {
 
                     <div>
                         <a href="#shop">SHOP</a>
-                        <a href="#categories">CATEGORIES</a>
-                        <a href="#build">BUILD A PC</a>
+                        <a href="#categories">
+                            CATEGORIES
+                        </a>
+                        <a href="#build">
+                            BUILD A PC
+                        </a>
                     </div>
 
                     <div>
@@ -564,6 +797,26 @@ function App() {
                     </p>
                 </div>
             </footer>
+
+            {accountOpen && (
+                <AccountModal
+                    onClose={() =>
+                        setAccountOpen(false)
+                    }
+                    onLogin={handleLogin}
+                />
+            )}
+
+            {cartOpen && (
+                <CartDrawer
+                    cart={cart}
+                    onClose={() => setCartOpen(false)}
+                    onCartChanged={loadCart}
+                    onCheckoutComplete={
+                        handleCheckoutComplete
+                    }
+                />
+            )}
         </main>
     );
 }

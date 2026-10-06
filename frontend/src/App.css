@@ -1844,3 +1844,461 @@ footer {
     }
 }
 
+/* =========================================================
+   ACCOUNT + CART
+   ========================================================= */
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(16, 18, 20, 0.62);
+    backdrop-filter: blur(6px);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.account-panel,
+.cart-drawer {
+    width: min(100%, 560px);
+    height: 100%;
+    padding: 1.5rem;
+    background: var(--paper);
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    animation: pardrit-panel-in 260ms
+        cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes pardrit-panel-in {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+.panel-top {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 0.62rem;
+    font-weight: 800;
+}
+
+.panel-top button {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+.account-heading,
+.cart-heading {
+    padding: 4rem 0 3rem;
+}
+
+.account-heading p {
+    margin: 0 0 1rem;
+    font-size: 0.58rem;
+    font-weight: 800;
+}
+
+.account-heading h2,
+.cart-heading h2 {
+    margin: 0;
+    color: var(--pardrit);
+    font-size: clamp(3.4rem, 7vw, 6.5rem);
+    line-height: 0.8;
+    letter-spacing: -0.075em;
+}
+
+.account-form {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.account-form label {
+    display: grid;
+    gap: 0.55rem;
+    font-size: 0.58rem;
+    font-weight: 800;
+}
+
+.account-form input {
+    width: 100%;
+    padding: 0.85rem 0;
+    border: 0;
+    border-bottom: 1px solid var(--ink);
+    outline: 0;
+    background: transparent;
+    color: var(--ink);
+    border-radius: 0;
+    font: inherit;
+    font-size: 1rem;
+}
+
+.account-form input:focus {
+    border-bottom-color: var(--pardrit);
+}
+
+.account-submit,
+.checkout-button {
+    min-height: 58px;
+    margin-top: 1rem;
+    border: 0;
+    background: var(--pardrit);
+    color: var(--paper);
+    cursor: pointer;
+    font-size: 0.7rem;
+    font-weight: 800;
+    transition:
+        background 180ms ease,
+        color 180ms ease;
+}
+
+.account-submit:hover,
+.checkout-button:hover:not(:disabled) {
+    background: var(--ink);
+}
+
+.account-submit:disabled,
+.checkout-button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.account-switch {
+    width: max-content;
+    margin-top: 1.5rem;
+    padding: 0 0 0.25rem;
+    border: 0;
+    border-bottom: 1px solid var(--ink);
+    background: transparent;
+    cursor: pointer;
+    font-size: 0.6rem;
+    font-weight: 800;
+}
+
+.form-error,
+.catalog-error {
+    color: var(--pardrit);
+    font-size: 0.68rem;
+    font-weight: 700;
+}
+
+.cart-heading {
+    padding-bottom: 2rem;
+}
+
+.cart-items {
+    border-top: 1px solid var(--ink);
+}
+
+.cart-item {
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 32px 110px minmax(0, 1fr) auto;
+    gap: 1rem;
+    align-items: start;
+}
+
+.cart-index {
+    font-size: 0.55rem;
+    font-weight: 800;
+}
+
+.cart-item-info h3 {
+    margin: 0;
+    font-size: 1rem;
+    letter-spacing: -0.03em;
+}
+
+.cart-item-info > p {
+    margin: 0.35rem 0 0;
+    color: #6e7476;
+    font-size: 0.55rem;
+    font-weight: 700;
+}
+
+.quantity-control {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.quantity-control button {
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--ink);
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+}
+
+.quantity-control span {
+    min-width: 20px;
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 800;
+}
+
+.cart-item-end {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.cart-item-end strong {
+    font-size: 0.8rem;
+}
+
+.cart-item-end button {
+    padding: 0 0 0.2rem;
+    border: 0;
+    border-bottom: 1px solid var(--ink);
+    background: transparent;
+    cursor: pointer;
+    font-size: 0.52rem;
+    font-weight: 800;
+}
+
+.empty-cart {
+    flex: 1;
+    min-height: 300px;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    place-content: center;
+    text-align: center;
+}
+
+.empty-cart > span {
+    color: rgba(16, 18, 20, 0.08);
+    font-size: 8rem;
+    font-weight: 900;
+    line-height: 0.8;
+}
+
+.empty-cart p {
+    margin: 1.5rem 0 0;
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.cart-summary {
+    margin-top: auto;
+    padding-top: 2rem;
+}
+
+.cart-summary > div {
+    padding: 1rem 0;
+    border-top: 1px solid var(--ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.cart-summary span {
+    font-size: 0.6rem;
+    font-weight: 800;
+}
+
+.cart-summary strong {
+    color: var(--pardrit);
+    font-size: 1.7rem;
+    letter-spacing: -0.05em;
+}
+
+.checkout-button {
+    width: 100%;
+    margin-top: 0;
+}
+
+@media (max-width: 600px) {
+    .overlay {
+        align-items: flex-end;
+    }
+
+    .account-panel,
+    .cart-drawer {
+        width: 100%;
+        height: min(92svh, 760px);
+        padding: 1rem;
+    }
+
+    .account-heading,
+    .cart-heading {
+        padding-top: 2.5rem;
+    }
+
+    .account-heading h2,
+    .cart-heading h2 {
+        font-size: clamp(3rem, 15vw, 4.6rem);
+    }
+
+    .cart-item {
+        grid-template-columns: 24px 82px minmax(0, 1fr);
+        gap: 0.75rem;
+    }
+
+    .cart-item-end {
+        grid-column: 3;
+        flex-direction: row;
+        align-items: center;
+    }
+}
+
+.cart-item-image {
+    width: 110px;
+    height: 110px;
+    flex: 0 0 110px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+    background: rgba(16, 18, 20, 0.04);
+}
+
+.cart-item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 10px;
+}
+
+.cart-item-image span {
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    opacity: 0.35;
+}
+
+@media (max-width: 600px) {
+    .cart-item-image {
+        width: 82px;
+        height: 82px;
+        flex-basis: 82px;
+    }
+
+    .cart-item-image img {
+        padding: 7px;
+    }
+}
+
+.field-error {
+    display: block;
+    margin-top: 7px;
+
+    color: var(--pardrit);
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+.field-hint {
+    display: block;
+    margin-top: 7px;
+
+    color: rgba(16, 18, 20, 0.58);
+    font-size: 0.68rem;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+.account-form input[aria-invalid="true"] {
+    border-color: var(--pardrit);
+}
+
+.form-error {
+    color: var(--pardrit);
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+/* =========================================================
+   CART DRAWER — FINAL VERTICAL LAYOUT
+   Header + title + summary stay fixed.
+   Only product list scrolls.
+   ========================================================= */
+
+.cart-drawer {
+    height: 100dvh;
+    max-height: 100dvh;
+    min-height: 0;
+    display: grid;
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
+    overflow: hidden;
+}
+
+.cart-drawer .panel-top,
+.cart-drawer .cart-heading {
+    min-height: 0;
+}
+
+.cart-items {
+    min-height: 0;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+}
+
+.cart-summary {
+    min-height: 0;
+    margin-top: 0;
+    padding-top: 1rem;
+    background: var(--paper);
+    position: relative;
+    z-index: 2;
+}
+
+.cart-items::-webkit-scrollbar {
+    width: 5px;
+}
+
+.cart-items::-webkit-scrollbar-thumb {
+    background: rgba(16, 18, 20, 0.28);
+}
+
+.cart-items::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+@media (max-width: 600px) {
+    .cart-drawer {
+        height: min(92dvh, 760px);
+        max-height: 92dvh;
+        grid-template-rows: auto auto minmax(0, 1fr) auto;
+    }
+
+    .cart-heading {
+        padding-top: 2rem;
+        padding-bottom: 1.25rem;
+    }
+
+    .cart-summary {
+        padding-top: 0.75rem;
+    }
+}
