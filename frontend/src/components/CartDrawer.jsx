@@ -6,22 +6,22 @@ import {
 
 const productImages = {
     "GeForce RTX 4070":
-        "/images/products/rtx-4070-zotac.webp",
+        `${import.meta.env.BASE_URL}images/products/rtx-4070-zotac.webp`,
 
     "Ryzen 5 5600X":
-        "/images/products/ryzen-5-5600x.webp",
+        `${import.meta.env.BASE_URL}images/products/ryzen-5-5600x.webp`,
 
     "B850 Gaming WiFi6":
-        "/images/products/b850-gaming-wifi6.webp",
+        `${import.meta.env.BASE_URL}images/products/b850-gaming-wifi6.webp`,
 
     "Rival 5":
-        "/images/products/steelseries-rival-5.webp",
+        `${import.meta.env.BASE_URL}images/products/steelseries-rival-5.webp`,
 
     "Apex 100":
-        "/images/products/steelseries-apex-100.webp",
+        `${import.meta.env.BASE_URL}images/products/steelseries-apex-100.webp`,
 
     "AX20 RGB Elite":
-        "/images/products/antec-ax20-rgb-elite.webp",
+        `${import.meta.env.BASE_URL}images/products/antec-ax20-rgb-elite.webp`,
 };
 
 function formatPrice(value) {
