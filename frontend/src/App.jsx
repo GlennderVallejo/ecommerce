@@ -620,7 +620,7 @@ function App() {
                             </span>
 
                             <img
-                                src=`${import.meta.env.BASE_URL}images/products/b850-gaming-wifi6.webp`
+                                src={`${import.meta.env.BASE_URL}images/products/b850-gaming-wifi6.webp`}
                                 alt=""
                             />
                         </div>
