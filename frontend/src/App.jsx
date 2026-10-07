@@ -16,28 +16,28 @@ const categoryPresentation = {
         name: "PC Components",
         description: "Graphics, components and everything inside.",
         code: "CORE",
-        image: `${import.meta.env.BASE_URL}images/products/b850-gaming-wifi6.webp",
+        image: `${import.meta.env.BASE_URL}images/products/b850-gaming-wifi6.webp`,
         imageFit: "wide",
     },
     Peripherals: {
         name: "Peripherals",
         description: "Mice, keyboards and precise control.",
         code: "INPUT",
-        image: `${import.meta.env.BASE_URL}images/products/steelseries-rival-5.webp",
+        image: `${import.meta.env.BASE_URL}images/products/steelseries-rival-5.webp`,
         imageFit: "wide",
     },
     Processors: {
         name: "Processors",
         description: "The silicon at the center of every serious system.",
         code: "COMPUTE",
-        image: `${import.meta.env.BASE_URL}images/products/ryzen-5-5600x.webp",
+        image: `${import.meta.env.BASE_URL}images/products/ryzen-5-5600x.webp`,
         imageFit: "square",
     },
     Cases: {
         name: "Cases & Builds",
         description: "Cases and complete systems built around your hardware.",
         code: "SYSTEM",
-        image: `${import.meta.env.BASE_URL}images/products/antec-ax20-rgb-elite.webp",
+        image: `${import.meta.env.BASE_URL}images/products/antec-ax20-rgb-elite.webp`,
         imageFit: "portrait",
     },
 };
@@ -46,37 +46,37 @@ const productPresentation = {
     "GeForce RTX 4070": {
         brand: "ZOTAC GAMING",
         type: "GRAPHICS",
-        image: `${import.meta.env.BASE_URL}images/products/rtx-4070-zotac.webp",
+        image: `${import.meta.env.BASE_URL}images/products/rtx-4070-zotac.webp`,
         imageFit: "wide",
     },
     "Ryzen 5 5600X": {
         brand: "AMD",
         type: "PROCESSOR",
-        image: `${import.meta.env.BASE_URL}images/products/ryzen-5-5600x.webp",
+        image: `${import.meta.env.BASE_URL}images/products/ryzen-5-5600x.webp`,
         imageFit: "square",
     },
     "B850 Gaming WiFi6": {
         brand: "GIGABYTE",
         type: "MOTHERBOARD",
-        image: `${import.meta.env.BASE_URL}images/products/b850-gaming-wifi6.webp",
+        image: `${import.meta.env.BASE_URL}images/products/b850-gaming-wifi6.webp`,
         imageFit: "wide",
     },
     "Rival 5": {
         brand: "STEELSERIES",
         type: "PERIPHERALS",
-        image: `${import.meta.env.BASE_URL}images/products/steelseries-rival-5.webp",
+        image: `${import.meta.env.BASE_URL}images/products/steelseries-rival-5.webp`,
         imageFit: "wide",
     },
     "Apex 100": {
         brand: "STEELSERIES",
         type: "KEYBOARD",
-        image: `${import.meta.env.BASE_URL}images/products/steelseries-apex-100.webp",
+        image: `${import.meta.env.BASE_URL}images/products/steelseries-apex-100.webp`,
         imageFit: "wide",
     },
     "AX20 RGB Elite": {
         brand: "ANTEC",
         type: "CASE",
-        image: `${import.meta.env.BASE_URL}images/products/antec-ax20-rgb-elite.webp",
+        image: `${import.meta.env.BASE_URL}images/products/antec-ax20-rgb-elite.webp`,
         imageFit: "portrait",
     },
 };
@@ -270,7 +270,7 @@ function App() {
                                 "HARDWARE",
                             image:
                                 presentation.image ??
-                                `${import.meta.env.BASE_URL}images/products/b850-gaming-wifi6.webp",
+                                `${import.meta.env.BASE_URL}images/products/b850-gaming-wifi6.webp`,
                             imageFit:
                                 presentation.imageFit ?? "wide",
                         };
@@ -620,7 +620,7 @@ function App() {
                             </span>
 
                             <img
-                                src=`${import.meta.env.BASE_URL}images/products/b850-gaming-wifi6.webp"
+                                src=`${import.meta.env.BASE_URL}images/products/b850-gaming-wifi6.webp`
                                 alt=""
                             />
                         </div>
