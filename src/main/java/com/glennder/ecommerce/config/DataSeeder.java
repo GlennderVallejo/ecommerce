@@ -19,14 +19,20 @@ public class DataSeeder {
 
         return args -> {
 
-            if (productRepository.count() != 1) {
+            long productCount = productRepository.count();
+
+            if (productCount > 1) {
                 return;
             }
 
-            Product existingProduct = productRepository.findAll().get(0);
+            Product existingProduct = null;
 
-            if (!existingProduct.getName().equalsIgnoreCase("hola")) {
-                return;
+            if (productCount == 1) {
+                existingProduct = productRepository.findAll().get(0);
+
+                if (!existingProduct.getName().equalsIgnoreCase("hola")) {
+                    return;
+                }
             }
 
             Category electronics = findOrCreateCategory(
@@ -54,17 +60,27 @@ public class DataSeeder {
                     "Cases"
             );
 
-            // Reuse the old test product instead of deleting it,
-            // because historical order items reference its ID.
-            existingProduct.setName("GeForce RTX 4070");
-            existingProduct.setDescription(
-                    "ZOTAC GAMING graphics card built for high-performance gaming."
-            );
-            existingProduct.setPrice(new BigDecimal("429900.00"));
-            existingProduct.setStock(8);
-            existingProduct.setCategory(electronics);
+            if (existingProduct == null) {
+                productRepository.save(new Product(
+                        "GeForce RTX 4070",
+                        "ZOTAC GAMING graphics card built for high-performance gaming.",
+                        new BigDecimal("429900.00"),
+                        8,
+                        electronics
+                ));
+            } else {
+                // Reuse the old test product instead of deleting it,
+                // because historical order items reference its ID.
+                existingProduct.setName("GeForce RTX 4070");
+                existingProduct.setDescription(
+                        "ZOTAC GAMING graphics card built for high-performance gaming."
+                );
+                existingProduct.setPrice(new BigDecimal("429900.00"));
+                existingProduct.setStock(8);
+                existingProduct.setCategory(electronics);
 
-            productRepository.save(existingProduct);
+                productRepository.save(existingProduct);
+            }
 
             productRepository.save(new Product(
                     "Ryzen 5 5600X",
