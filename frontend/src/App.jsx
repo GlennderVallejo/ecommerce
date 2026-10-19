@@ -104,6 +104,8 @@ function ProductCard({ product, index, onAddToCart }) {
                     className={`product-image product-image--${product.imageFit}`}
                     src={product.image}
                     alt={`${product.brand} ${product.name}`}
+                    loading={index < 3 ? "eager" : "lazy"}
+                    decoding="async"
                 />
 
                 <button
@@ -153,6 +155,8 @@ function CategoryCard({ category, index }) {
                     className={`category-image category-image--${category.imageFit}`}
                     src={category.image}
                     alt=""
+                    loading={index < 2 ? "eager" : "lazy"}
+                    decoding="async"
                 />
             </div>
 
@@ -247,60 +251,49 @@ function App() {
     };
 
     useEffect(() => {
-        const loadCatalog = async () => {
+        // Fetch independently: a slow categories request must not delay products.
+        const loadProducts = async () => {
             try {
-                const [productsData, categoriesData] =
-                    await Promise.all([
-                        getProducts(),
-                        getCategories(),
-                    ]);
-
-                const enrichedProducts = productsData.map(
-                    (product) => {
-                        const presentation =
-                            productPresentation[product.name] ?? {};
-
-                        return {
-                            ...product,
-                            brand:
-                                presentation.brand ?? "PARDRIT",
-                            type:
-                                presentation.type ??
-                                product.categoryName?.toUpperCase() ??
-                                "HARDWARE",
-                            image:
-                                presentation.image ??
-                                `${import.meta.env.BASE_URL}images/products/b850-gaming-wifi6.webp`,
-                            imageFit:
-                                presentation.imageFit ?? "wide",
-                        };
-                    }
-                );
-
-                const enrichedCategories = categoriesData
-                    .filter(
-                        (category) =>
-                            categoryPresentation[category.name]
-                    )
-                    .map((category) => ({
-                        ...category,
-                        ...categoryPresentation[category.name],
-                    }));
-
+                const productsData = await getProducts();
+                const enrichedProducts = productsData.map((product) => {
+                    const presentation = productPresentation[product.name] ?? {};
+                    return {
+                        ...product,
+                        brand: presentation.brand ?? "PARDRIT",
+                        type: presentation.type ??
+                            product.categoryName?.toUpperCase() ?? "HARDWARE",
+                        image: presentation.image ??
+                            `${import.meta.env.BASE_URL}images/products/b850-gaming-wifi6.webp`,
+                        imageFit: presentation.imageFit ?? "wide",
+                    };
+                });
                 setProducts(enrichedProducts);
-                setCategories(enrichedCategories);
                 setCatalogError(false);
             } catch (error) {
-                console.error(
-                    "PARDRIT catalog error:",
-                    error
-                );
+                console.error("PARDRIT products error:", error);
                 setCatalogError(true);
             }
         };
 
-        loadCatalog();
-        loadCart();
+        const loadCategories = async () => {
+            try {
+                const categoriesData = await getCategories();
+                setCategories(
+                    categoriesData
+                        .filter((category) => categoryPresentation[category.name])
+                        .map((category) => ({
+                            ...category,
+                            ...categoryPresentation[category.name],
+                        }))
+                );
+            } catch (error) {
+                console.error("PARDRIT categories error:", error);
+            }
+        };
+
+        void loadProducts();
+        void loadCategories();
+        void loadCart();
     }, []);
 
     const handleLogin = async () => {
