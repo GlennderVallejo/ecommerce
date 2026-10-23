@@ -37,3 +37,19 @@ nbactions.xmlfrontend.zip
 frontend(5).zip
 frontend-restaurado-exacto-1.zip
 nbactions.xml
+
+# Local environment and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.p12
+*.pfx
+*service-account*.json
+*credentials*.json
+application-local.properties
+application-prod.properties
+
+# Local logs and OS files
+*.log
+.DS_Store
