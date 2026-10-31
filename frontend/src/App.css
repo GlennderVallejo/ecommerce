@@ -369,8 +369,8 @@ button {
 
 /* =========================================================
    CATEGORY MEDIA
-   NORMAL = TODO RECTO
-   HOVER = IMAGEN + LÍNEAS ROTAN
+   DEFAULT: STRAIGHT LINES AND IMAGES
+   HOVER: ROTATED LINES AND IMAGES
    ========================================================= */
 
 .category-media {
@@ -383,7 +383,7 @@ button {
     overflow: hidden;
 }
 
-/* Líneas rectas en estado normal */
+/* Straight lines by default */
 
 .category-media::before,
 .category-media::after {
@@ -408,7 +408,7 @@ button {
     transform: rotate(0deg);
 }
 
-/* Todas las imágenes rectas en estado normal */
+/* Images remain upright by default */
 
 .category-media img {
     width: 78%;
@@ -488,21 +488,21 @@ button {
     color: var(--paper);
 }
 
-/* Horizontal pasa de recta a diagonal */
+/* Rotate horizontal line on hover */
 
 .category-card:hover .category-media::before {
     background: rgba(245, 243, 238, 0.35);
     transform: rotate(-14deg);
 }
 
-/* Vertical pasa de recta a diagonal */
+/* Rotate vertical line on hover */
 
 .category-card:hover .category-media::after {
     background: rgba(245, 243, 238, 0.35);
     transform: rotate(14deg);
 }
 
-/* TODAS las imágenes reaccionan igual */
+/* Apply the same hover effect to all images */
 
 .category-card:hover .category-media img {
     transform: rotate(-6deg) scale(1.07);
@@ -591,8 +591,8 @@ button {
 
 /* =========================================================
    PRODUCT IMAGE SYSTEM
-   NORMAL = RECTO
-   HOVER = ROTACIÓN
+   DEFAULT: UPRIGHT
+   HOVER: ROTATED
    ========================================================= */
 
 .product-image {
@@ -602,7 +602,7 @@ button {
     object-position: center;
     mix-blend-mode: multiply;
 
-    /* Siempre recto antes del hover */
+    /* Keep images upright before hover */
     transform: rotate(0deg);
 
     transition:
@@ -610,7 +610,7 @@ button {
         filter 300ms ease;
 }
 
-/* Solo normalización de proporciones */
+/* Normalize image proportions */
 
 .product-image--wide {
     width: 88%;
@@ -627,16 +627,14 @@ button {
     height: 78%;
 }
 
-/* El fondo responde ligeramente */
+/* Subtle background response */
 
 .product-card:hover .product-visual::before {
     transform: scale(1.12);
 }
 
 /*
- * TODOS:
- * 0° normal
- * -5° + zoom en hover
+ * All product images start at 0° and rotate -5° with a slight zoom on hover
  */
 
 .product-card:hover .product-image {
@@ -998,7 +996,7 @@ footer {
     .header-actions { gap: 0.85rem; }
     .mobile-menu-button, .bag-button { font-size: 0.62rem; }
 
-    /* Hero mobile — canonical */
+    /* Mobile hero */
     .hero {
         min-height: 0;
         height: auto;
@@ -1057,7 +1055,7 @@ footer {
     .manifesto-machine { margin-top: 2rem; }
     .categories-heading { margin-bottom: 1.75rem; }
 
-    /* Cards: compactas y proporcionales en móvil */
+    /* Compact, proportional cards on mobile */
     .category-grid {
         grid-template-columns: 1fr;
     }
@@ -1212,7 +1210,7 @@ footer {
 
 
 /* =========================================================
-   MOBILE PRODUCT CAROUSEL — POINTER/TOUCH FIX
+   MOBILE PRODUCT CAROUSEL — TOUCH INTERACTIONS
    ========================================================= */
 @media (max-width: 600px) {
     .shop {
@@ -1262,9 +1260,8 @@ footer {
 }
 
 /* =========================================================
-   MOBILE CATEGORY GRID — canonical responsive adaptation
-   Preserves the original desktop card behavior/visual language.
-   No item-specific rules.
+   MOBILE CATEGORY GRID
+   Maintain consistent card behavior across screen sizes.
    ========================================================= */
 @media (max-width: 600px) {
     .categories {
@@ -1399,8 +1396,8 @@ footer {
 }
 
 /* =========================================================
-   MOBILE — STATEMENT + FOOTER (canonical)
-   Keep desktop styling as source of truth; only reflow geometry.
+   MOBILE — STATEMENT AND FOOTER
+   Adjust layout for smaller screens.
    ========================================================= */
 @media (max-width: 600px) {
     .statement {
@@ -1511,8 +1508,8 @@ footer {
 }
 
 /* =========================================================
-   DESKTOP 1080P — CANONICAL COMPOSITION SCALE
-   Global system-level reflow. No item-specific styling.
+   DESKTOP LAYOUT
+   Spacing and sizing for wide screens.
    ========================================================= */
 @media (min-width: 901px) {
     /* Global rhythm */
@@ -2237,7 +2234,7 @@ footer {
 }
 
 /* =========================================================
-   CART DRAWER — FINAL VERTICAL LAYOUT
+   CART DRAWER LAYOUT
    Header + title + summary stay fixed.
    Only product list scrolls.
    ========================================================= */
