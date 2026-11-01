@@ -4,6 +4,10 @@ Pardrit is a full-stack e-commerce project focused on PC hardware. I built it to
 
 The application supports browsing products, creating an account, managing a shopping cart, and placing demo orders. It is a portfolio project, not a live retail store.
 
+**[▶ Try the Live Demo](https://glenndervallejo.github.io/ecommerce/)** · **[Source Code](https://github.com/GlennderVallejo/ecommerce)**
+
+The demo runs in your browser; no installation is required. Orders are simulated and no real payments are processed.
+
 ## Tech stack
 
 **Backend:** Java 21, Spring Boot 4, Spring Security, Spring Data JPA, PostgreSQL, JWT, BCrypt, Maven, Swagger / OpenAPI
