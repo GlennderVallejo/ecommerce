@@ -3,7 +3,7 @@ import "./App.css";
 
 import AccountModal from "./components/AccountModal";
 import CartDrawer from "./components/CartDrawer";
-import { getProductPresentation } from "./productPresentation";
+import { getProductPresentation, productPresentation } from "./productPresentation";
 
 import {
     addToCart,
@@ -54,7 +54,7 @@ function Arrow() {
     return <span aria-hidden="true">↗</span>;
 }
 
-function ProductCard({ product, index, onAddToCart }) {
+function ProductCard({ product, index, onAddToCart, preview = false }) {
     return (
         <article className="product-card">
             <div className="product-visual">
@@ -75,7 +75,7 @@ function ProductCard({ product, index, onAddToCart }) {
                     <span className="product-image-placeholder">PARDRIT</span>
                 )}
 
-                <button
+                {!preview && <button
                     className="wishlist"
                     type="button"
                     aria-label={`Add ${product.name} to bag`}
@@ -83,11 +83,11 @@ function ProductCard({ product, index, onAddToCart }) {
                     onClick={() => onAddToCart(product)}
                 >
                     +
-                </button>
+                </button>}
 
-                <span className="product-view">
+                {!preview && <span className="product-view">
                     ADD <Arrow />
-                </span>
+                </span>}
             </div>
 
             <div className="product-meta">
@@ -98,7 +98,7 @@ function ProductCard({ product, index, onAddToCart }) {
 
                 <div className="product-price">
                     <p>{product.type}</p>
-                    <strong>{formatPrice(product.price)}</strong>
+                    <strong>{preview ? "LOADING PRICE…" : formatPrice(product.price)}</strong>
                 </div>
             </div>
         </article>
@@ -145,7 +145,9 @@ function App() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     const [products, setProducts] = useState([]);
+    const [productsLoading, setProductsLoading] = useState(true);
     const [categories, setCategories] = useState([]);
+    const [categoriesLoading, setCategoriesLoading] = useState(true);
     const [catalogError, setCatalogError] = useState(false);
 
     const [accountOpen, setAccountOpen] = useState(false);
@@ -164,6 +166,16 @@ function App() {
         startX: 0,
         startScrollLeft: 0,
     });
+
+    // Render known product artwork immediately; never invent prices, stock or IDs.
+    const previewProducts = Object.entries(productPresentation).map(([name, presentation]) => ({
+        name,
+        ...presentation,
+    }));
+    const previewCategories = Object.entries(categoryPresentation).map(([name, presentation]) => ({
+        name,
+        ...presentation,
+    }));
 
     const cartQuantity = cart.reduce(
         (total, item) => total + item.quantity,
@@ -238,6 +250,8 @@ function App() {
             } catch (error) {
                 console.error("PARDRIT products error:", error);
                 setCatalogError(true);
+            } finally {
+                setProductsLoading(false);
             }
         };
 
@@ -254,6 +268,8 @@ function App() {
                 );
             } catch (error) {
                 console.error("PARDRIT categories error:", error);
+            } finally {
+                setCategoriesLoading(false);
             }
         };
 
@@ -632,10 +648,10 @@ function App() {
                 </div>
 
                 <div className="category-grid">
-                    {categories.map(
+                    {(categoriesLoading ? previewCategories : categories).map(
                         (category, index) => (
                             <CategoryCard
-                                key={category.id}
+                                key={category.id ?? category.name}
                                 category={category}
                                 index={index}
                             />
@@ -675,14 +691,13 @@ function App() {
                     onPointerCancel={endProductDrag}
                     onPointerLeave={endProductDrag}
                 >
-                    {products.map((product, index) => (
+                    {(productsLoading ? previewProducts : products).map((product, index) => (
                         <ProductCard
-                            key={product.id}
+                            key={product.id ?? product.name}
                             product={product}
                             index={index}
-                            onAddToCart={
-                                handleAddToCart
-                            }
+                            onAddToCart={handleAddToCart}
+                            preview={productsLoading}
                         />
                     ))}
                 </div>
