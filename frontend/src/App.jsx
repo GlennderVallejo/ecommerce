@@ -3,6 +3,7 @@ import "./App.css";
 
 import AccountModal from "./components/AccountModal";
 import CartDrawer from "./components/CartDrawer";
+import { getProductPresentation } from "./productPresentation";
 
 import {
     addToCart,
@@ -42,44 +43,6 @@ const categoryPresentation = {
     },
 };
 
-const productPresentation = {
-    "GeForce RTX 4070": {
-        brand: "ZOTAC GAMING",
-        type: "GRAPHICS",
-        image: `${import.meta.env.BASE_URL}images/products/rtx-4070-zotac.webp`,
-        imageFit: "wide",
-    },
-    "Ryzen 5 5600X": {
-        brand: "AMD",
-        type: "PROCESSOR",
-        image: `${import.meta.env.BASE_URL}images/products/ryzen-5-5600x.webp`,
-        imageFit: "square",
-    },
-    "B850 Gaming WiFi6": {
-        brand: "GIGABYTE",
-        type: "MOTHERBOARD",
-        image: `${import.meta.env.BASE_URL}images/products/b850-gaming-wifi6.webp`,
-        imageFit: "wide",
-    },
-    "Rival 5": {
-        brand: "STEELSERIES",
-        type: "PERIPHERALS",
-        image: `${import.meta.env.BASE_URL}images/products/steelseries-rival-5.webp`,
-        imageFit: "wide",
-    },
-    "Apex 100": {
-        brand: "STEELSERIES",
-        type: "KEYBOARD",
-        image: `${import.meta.env.BASE_URL}images/products/steelseries-apex-100.webp`,
-        imageFit: "wide",
-    },
-    "AX20 RGB Elite": {
-        brand: "ANTEC",
-        type: "CASE",
-        image: `${import.meta.env.BASE_URL}images/products/antec-ax20-rgb-elite.webp`,
-        imageFit: "portrait",
-    },
-};
 
 function formatPrice(price) {
     return `₡${Number(price).toLocaleString("en-US", {
@@ -100,13 +63,17 @@ function ProductCard({ product, index, onAddToCart }) {
                     <span>{product.type}</span>
                 </div>
 
-                <img
-                    className={`product-image product-image--${product.imageFit}`}
-                    src={product.image}
-                    alt={`${product.brand} ${product.name}`}
-                    loading={index < 3 ? "eager" : "lazy"}
-                    decoding="async"
-                />
+                {product.image ? (
+                    <img
+                        className={`product-image product-image--${product.imageFit}`}
+                        src={product.image}
+                        alt={`${product.brand} ${product.name}`}
+                        loading={index < 3 ? "eager" : "lazy"}
+                        decoding="async"
+                    />
+                ) : (
+                    <span className="product-image-placeholder">PARDRIT</span>
+                )}
 
                 <button
                     className="wishlist"
@@ -256,14 +223,13 @@ function App() {
             try {
                 const productsData = await getProducts();
                 const enrichedProducts = productsData.map((product) => {
-                    const presentation = productPresentation[product.name] ?? {};
+                    const presentation = getProductPresentation(product.name);
                     return {
                         ...product,
                         brand: presentation.brand ?? "PARDRIT",
                         type: presentation.type ??
                             product.categoryName?.toUpperCase() ?? "HARDWARE",
-                        image: presentation.image ??
-                            `${import.meta.env.BASE_URL}images/products/b850-gaming-wifi6.webp`,
+                        image: presentation.image ?? null,
                         imageFit: presentation.imageFit ?? "wide",
                     };
                 });
