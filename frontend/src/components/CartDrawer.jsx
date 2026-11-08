@@ -3,26 +3,8 @@ import {
     removeCartItem,
     updateCartItem,
 } from "../services/api";
+import { getProductPresentation } from "../productPresentation";
 
-const productImages = {
-    "GeForce RTX 4070":
-        `${import.meta.env.BASE_URL}images/products/rtx-4070-zotac.webp`,
-
-    "Ryzen 5 5600X":
-        `${import.meta.env.BASE_URL}images/products/ryzen-5-5600x.webp`,
-
-    "B850 Gaming WiFi6":
-        `${import.meta.env.BASE_URL}images/products/b850-gaming-wifi6.webp`,
-
-    "Rival 5":
-        `${import.meta.env.BASE_URL}images/products/steelseries-rival-5.webp`,
-
-    "Apex 100":
-        `${import.meta.env.BASE_URL}images/products/steelseries-apex-100.webp`,
-
-    "AX20 RGB Elite":
-        `${import.meta.env.BASE_URL}images/products/antec-ax20-rgb-elite.webp`,
-};
 
 function formatPrice(value) {
     return `₡${Number(value).toLocaleString("en-US", {
@@ -124,7 +106,7 @@ function CartDrawer({
                     <div className="cart-items">
                         {cart.map((item, index) => {
                             const image =
-                                productImages[item.productName];
+                                getProductPresentation(item.productName).image;
 
                             return (
                                 <article
