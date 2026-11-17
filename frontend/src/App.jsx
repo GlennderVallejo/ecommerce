@@ -651,7 +651,7 @@ function App() {
                 </div>
 
                 <div className="category-grid">
-                    {(categoriesLoading ? previewCategories : categories).map(
+                    {(categoriesLoading || categories.length === 0 ? previewCategories : categories).map(
                         (category, index) => (
                             <CategoryCard
                                 key={category.id ?? category.name}
@@ -697,13 +697,13 @@ function App() {
                     onPointerCancel={endProductDrag}
                     onPointerLeave={endProductDrag}
                 >
-                    {(productsLoading ? previewProducts : products).map((product, index) => (
+                    {(productsLoading || catalogError ? previewProducts : products).map((product, index) => (
                         <ProductCard
                             key={product.id ?? product.name}
                             product={product}
                             index={index}
                             onAddToCart={handleAddToCart}
-                            preview={productsLoading}
+                            preview={productsLoading || catalogError}
                         />
                     ))}
                 </div>
