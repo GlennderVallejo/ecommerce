@@ -181,6 +181,7 @@ function App() {
     const previewProducts = Object.entries(productPresentation).map(([name, presentation]) => ({
         name,
         ...presentation,
+        demoPrice: demoPrices[name],
     }));
     const previewCategories = Object.entries(categoryPresentation).map(([name, presentation]) => ({
         name,
