@@ -276,6 +276,7 @@ function App() {
         };
 
     useEffect(() => {
+    useEffect(() => {
         void loadProducts();
         void loadCategories();
         void loadCart();
@@ -681,6 +682,9 @@ function App() {
                 {catalogError && (
                     <p className="catalog-error">
                         Catalog temporarily unavailable. Please try again.
+                        <button type="button" onClick={() => { void loadProducts(); void loadCategories(); }}>
+                            RETRY CATALOG
+                        </button>
                         <button type="button" onClick={() => { void loadProducts(); void loadCategories(); }}>
                             RETRY CATALOG
                         </button>
