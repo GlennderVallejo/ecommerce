@@ -229,9 +229,10 @@ function App() {
         }
     };
 
-    useEffect(() => {
-        // Fetch independently: a slow categories request must not delay products.
-        const loadProducts = async () => {
+    // Keep product and category requests independent, including manual recovery.
+    const loadProducts = async () => {
+        setProductsLoading(true);
+        setCatalogError(false);
             try {
                 const productsData = await getProducts();
                 const enrichedProducts = productsData.map((product) => {
@@ -255,7 +256,8 @@ function App() {
             }
         };
 
-        const loadCategories = async () => {
+    const loadCategories = async () => {
+        setCategoriesLoading(true);
             try {
                 const categoriesData = await getCategories();
                 setCategories(
@@ -273,6 +275,7 @@ function App() {
             }
         };
 
+    useEffect(() => {
         void loadProducts();
         void loadCategories();
         void loadCart();
@@ -648,7 +651,7 @@ function App() {
                 </div>
 
                 <div className="category-grid">
-                    {(categoriesLoading ? previewCategories : categories).map(
+                    {(categoriesLoading || categories.length === 0 ? previewCategories : categories).map(
                         (category, index) => (
                             <CategoryCard
                                 key={category.id ?? category.name}
@@ -677,7 +680,10 @@ function App() {
 
                 {catalogError && (
                     <p className="catalog-error">
-                        Catalog temporarily unavailable.
+                        Catalog temporarily unavailable. Please try again.
+                        <button type="button" onClick={() => { void loadProducts(); void loadCategories(); }}>
+                            RETRY CATALOG
+                        </button>
                     </p>
                 )}
 
@@ -691,13 +697,13 @@ function App() {
                     onPointerCancel={endProductDrag}
                     onPointerLeave={endProductDrag}
                 >
-                    {(productsLoading ? previewProducts : products).map((product, index) => (
+                    {(productsLoading || catalogError ? previewProducts : products).map((product, index) => (
                         <ProductCard
                             key={product.id ?? product.name}
                             product={product}
                             index={index}
                             onAddToCart={handleAddToCart}
-                            preview={productsLoading}
+                            preview={productsLoading || catalogError}
                         />
                     ))}
                 </div>

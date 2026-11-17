@@ -1,6 +1,20 @@
 const API_URL =
     import.meta.env.VITE_API_URL ?? "http://localhost:8080/api";
 
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+async function requestCatalog(path) {
+    const delays = [1200, 2500, 4000];
+    for (let attempt = 0; ; attempt++) {
+        try {
+            return await request(path);
+        } catch (error) {
+            if (attempt >= delays.length || (error.status >= 400 && error.status < 500)) throw error;
+            await wait(delays[attempt]);
+        }
+    }
+}
+
 async function request(path, options = {}) {
     const token = localStorage.getItem("pardrit_token");
 
@@ -41,18 +55,20 @@ async function request(path, options = {}) {
             message = data.error;
         }
 
-        throw new Error(message);
+        const error = new Error(message);
+        error.status = response.status;
+        throw error;
     }
 
     return data;
 }
 
 export function getProducts() {
-    return request("/products");
+    return requestCatalog("/products");
 }
 
 export function getCategories() {
-    return request("/categories");
+    return requestCatalog("/categories");
 }
 
 export function registerUser(data) {
