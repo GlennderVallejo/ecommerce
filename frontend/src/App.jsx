@@ -78,7 +78,7 @@ function ProductCard({ product, index, onAddToCart, preview = false }) {
                         className={`product-image product-image--${product.imageFit}`}
                         src={product.image}
                         alt={`${product.brand} ${product.name}`}
-                        loading="eager"
+                        loading={index < 3 ? "eager" : "lazy"}
                         decoding="async"
                     />
                 ) : (
@@ -132,7 +132,7 @@ function CategoryCard({ category, index }) {
                     className={`category-image category-image--${category.imageFit}`}
                     src={category.image}
                     alt=""
-                    loading="eager"
+                    loading={index < 2 ? "eager" : "lazy"}
                     decoding="async"
                 />
             </div>
