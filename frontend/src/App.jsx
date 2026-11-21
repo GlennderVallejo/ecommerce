@@ -44,6 +44,16 @@ const categoryPresentation = {
 };
 
 
+// Demo prices mirror DataSeeder.java; they are not live quotes or purchasable stock.
+const demoPrices = {
+    "GeForce RTX 4070": 429900,
+    "Ryzen 5 5600X": 89900,
+    "B850 Gaming WiFi6": 119900,
+    "Rival 5": 39900,
+    "Apex 100": 34900,
+    "AX20 RGB Elite": 42900,
+};
+
 function formatPrice(price) {
     return `₡${Number(price).toLocaleString("en-US", {
         maximumFractionDigits: 0,
@@ -98,7 +108,8 @@ function ProductCard({ product, index, onAddToCart, preview = false }) {
 
                 <div className="product-price">
                     <p>{product.type}</p>
-                    <strong>{preview ? "LOADING PRICE…" : formatPrice(product.price)}</strong>
+                    <strong>{preview ? (product.demoPrice != null ? formatPrice(product.demoPrice) : "PRICE UNAVAILABLE") : formatPrice(product.price)}</strong>
+                    {preview && product.demoPrice != null && <small>DEMO PRICE · VERIFYING LIVE CATALOG</small>}
                 </div>
             </div>
         </article>
@@ -171,6 +182,7 @@ function App() {
     const previewProducts = Object.entries(productPresentation).map(([name, presentation]) => ({
         name,
         ...presentation,
+        demoPrice: demoPrices[name],
     }));
     const previewCategories = Object.entries(categoryPresentation).map(([name, presentation]) => ({
         name,
@@ -680,7 +692,7 @@ function App() {
 
                 {catalogError && (
                     <p className="catalog-error">
-                        Catalog temporarily unavailable. Please try again.
+                        Live catalog temporarily unavailable. Demo prices are shown; checkout is disabled until the connection recovers.
                         <button type="button" onClick={() => { void loadProducts(); void loadCategories(); }}>
                             RETRY CATALOG
                         </button>

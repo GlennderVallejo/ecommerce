@@ -724,6 +724,7 @@ button {
 .product-price {
     flex-shrink: 0;
     text-align: right;
+    min-width: max-content;
 }
 
 .product-price p {
@@ -733,7 +734,10 @@ button {
 .product-price strong {
     display: block;
     margin-top: 0.3rem;
-    font-size: 0.9rem;
+    font-size: clamp(1.05rem, 1.35vw, 1.3rem);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    white-space: nowrap;
 }
 
 /* =========================================================
@@ -1204,7 +1208,7 @@ footer {
     }
 
     .product-price strong {
-        font-size: 0.8rem;
+        font-size: 1rem;
     }
 }
 
