@@ -108,7 +108,8 @@ function ProductCard({ product, index, onAddToCart, preview = false }) {
 
                 <div className="product-price">
                     <p>{product.type}</p>
-                    <strong>{preview ? (product.demoPrice != null ? formatPrice(product.demoPrice) : "PRICE UNAVAILABLE") : formatPrice(product.price)}</strong>\n                    {preview && product.demoPrice != null && <small>DEMO PRICE · VERIFYING LIVE CATALOG</small>}
+                    <strong>{preview ? (product.demoPrice != null ? formatPrice(product.demoPrice) : "PRICE UNAVAILABLE") : formatPrice(product.price)}</strong>
+                    {preview && product.demoPrice != null && <small>DEMO PRICE · VERIFYING LIVE CATALOG</small>}
                 </div>
             </div>
         </article>
